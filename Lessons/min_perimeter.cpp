@@ -42,8 +42,6 @@ void rec(int l, int r) {
 	point mid = a[m];
 	rec(l, m), rec(m + 1, r);
 
-	//merge(a + l, a + m + 1, a + m + 1, a + r + 1, temp, &cmp_y);
-
 	copy(temp, temp + r - l + 1, a + l);
 
 	int tsz = 0;
