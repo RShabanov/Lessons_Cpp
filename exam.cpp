@@ -64,7 +64,6 @@ char* reverse(char* str, const int size) {
 }
 
 char* reverseEveryByte(char *str, const int size) {
-	int temp;
 	char* newStr = new char[size];
 
 	for (int i = 0; i < size; i++) // изменить порядок
