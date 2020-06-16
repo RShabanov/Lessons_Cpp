@@ -71,7 +71,6 @@ char* reverseEveryByte(char *str, const int size) {
 		newStr[i] = reverseBits(str[i]);
 
 	delete[] str;
-	//str = newStr;
 	return newStr;
 }
 
