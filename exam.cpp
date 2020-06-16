@@ -6,7 +6,7 @@ using namespace std;
 
 char* readF(const char*, int&);
 void reverse(const char*, const int);
-void reverseEveryByte(const char*, const int);
+void reverseEveryByte(char*, const int);
 char reverseBits(char);
 void writeF(const char*, const char*);
 
@@ -63,7 +63,7 @@ void reverse(const char* str, const int size) {
 	str = newStr;
 }
 
-void reverseEveryByte(const char *str, const int size) {
+void reverseEveryByte(char *str, const int size) {
 	int temp;
 	char* newStr = new char[size];
 
