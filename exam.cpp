@@ -8,6 +8,7 @@ using namespace std;
 char* read(int&);
 void reverse(const char*, const int);
 void reverseEveryBit(const char*, const int);
+void write(char*);
 
 
 int main() {
