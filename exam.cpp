@@ -1,31 +1,35 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <climits>
 using namespace std;
 
 
-char* read(int&);
+char* readF(const char*, int&);
 void reverse(const char*, const int);
-void reverseEveryBit(const char*, const int);
-void write(char*);
+void reverseEveryByte(const char*, const int);
+char reverseBits(char);
+void writeF(const char*, const char*);
 
 
 int main() {
 
-	char* str = read(size);
+	cout << "Enter file name (if file is somewhere out this folder, please, enter the path): ";
+	string fName;
+	getline(cin, fName);
+
+	int size{};
+	char* str = readF(&fName[0], size);
 
 	reverse(str, size);
+	reverseEveryByte(str, size);
 
+	writeF(&fName[0], str);
 
 	system("pause");
 	return 0;
 }
 
-char* read(int& size) {
-	cout << "Enter file name (if file is somewhere out this folder, please, enter the path): ";
-	string fName;
-	getline(cin, fName);
+char* readF(const char* fName, int& size) {
 
 	ifstream file(fName, ios_base::binary | ios_base::in);
 
@@ -56,15 +60,41 @@ void reverse(const char* str, const int size) {
 		newStr[i] = str[size - 1 - i];
 
 	delete[] str;
-
 	str = newStr;
 }
 
-void reverseEveryBit(const char *str, const int size) {
+void reverseEveryByte(const char *str, const int size) {
 	int temp;
 	char* newStr = new char[size];
 
-	for (int i = 0; i < size; i++) { // изменить порядок
-		
+	for (int i = 0; i < size; i++) // изменить порядок
+		newStr[i] = reverseBits(str[i]);
+
+	delete[] str;
+	str = newStr;
+}
+
+char reverseBits(char s) {
+
+	char newS = 0;
+
+	for (int i = 7; i >= 0; i--) {
+		if (s >> i) {
+			newS += (1 << (7 - i));
+			s -= (1 << i);
+		}
+	}
+	return newS;
+}
+
+void writeF(const char* fName, const char* str) {
+
+	ofstream  file(fName, ios::binary);
+	if (file) {
+		file.write(str, sizeof(str));
+		file.close();
+	}
+	else {
+		cout << "Error...\nCannot write file...\n";
 	}
 }
