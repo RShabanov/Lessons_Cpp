@@ -5,8 +5,8 @@ using namespace std;
 
 
 char* readF(const char*, int&);
-void reverse(char*, const int);
-void reverseEveryByte(char*, const int);
+char* reverse(char*, const int);
+char* reverseEveryByte(char*, const int);
 char reverseBits(char);
 void writeF(const char*, const char*);
 
@@ -20,8 +20,9 @@ int main() {
 	int size{};
 	char* str = readF(&fName[0], size);
 
-	reverse(str, size);
-	reverseEveryByte(str, size);
+	str = reverse(str, size);
+
+	str = reverseEveryByte(str, size);
 
 	writeF(&fName[0], str);
 
@@ -32,7 +33,6 @@ int main() {
 char* readF(const char* fName, int& size) {
 
 	ifstream file(fName, ios_base::binary | ios_base::in);
-
 
 	if (!file.is_open())
 		cout << "File is not found...\n";
@@ -52,7 +52,7 @@ char* readF(const char* fName, int& size) {
 	return nullptr;
 }
 
-void reverse(char* str, const int size) {
+char* reverse(char* str, const int size) {
 
 	char* newStr = new char[size];
 	
@@ -60,10 +60,10 @@ void reverse(char* str, const int size) {
 		newStr[i] = str[size - 1 - i];
 
 	delete[] str;
-	str = newStr;
+	return newStr;
 }
 
-void reverseEveryByte(char *str, const int size) {
+char* reverseEveryByte(char *str, const int size) {
 	int temp;
 	char* newStr = new char[size];
 
@@ -71,7 +71,8 @@ void reverseEveryByte(char *str, const int size) {
 		newStr[i] = reverseBits(str[i]);
 
 	delete[] str;
-	str = newStr;
+	//str = newStr;
+	return newStr;
 }
 
 char reverseBits(char s) {
