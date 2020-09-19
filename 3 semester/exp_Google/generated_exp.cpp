@@ -110,13 +110,11 @@ bool check(const char* filename1, const char* filename2) {
 	}
 
 	int i = 0;
-	while (true || i < N) {
+	while (true || i++ < N)
 		if (file1.get() != file2.get()) {
-			cout << "Mismatch at " << i + 1 << " position\n";
+			cout << "Mismatch at " << i << " position\n";
 			return false;
 		}
-		i++;
-	}
 
 	return true;
 }
