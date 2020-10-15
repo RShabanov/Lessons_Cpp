@@ -13,10 +13,10 @@ bool input_mode(const char*);
 
 int main() {
 	
-	int number;
+	unsigned int number;
 
 	cout << "Enter even number (how many digits you need):\t";
-	while (!(cin >> number)) {
+	while (!(cin >> number) || number % 2) {
 		if (cin.fail()) {
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
