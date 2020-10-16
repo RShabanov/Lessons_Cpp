@@ -15,6 +15,10 @@ int main() {
 	
 	unsigned int number;
 
+	// цепную дробь для е можно представить в виде бесконечной дроби
+	// [2; 1, 2, 1, 1, 4, 1, 1, 6, 1, 1, ..., 2n]
+	// здесь запрашивается у пользователя число 2n
+	// фактически, 2n - количество этажей
 	cout << "Enter even number (how many digits you need):\t";
 	while (!(cin >> number) || number % 2) {
 		if (cin.fail()) {
@@ -33,7 +37,8 @@ int main() {
 }
 
 
-
+// преобразуем цепную дробь в обычную
+// и выводим ее в консоль или файл (вариант выбирает пользователь)
 void compute_exp_with_fraction(unsigned int number, bool out = false) {
 
 	register int cnt = 0;
@@ -41,17 +46,19 @@ void compute_exp_with_fraction(unsigned int number, bool out = false) {
 
 	number -= 2;
 	while (number) {
-		if (cnt++ < 2) e.add_denom();
+		if (cnt++ < 2) e.add_denom(); // добавляем 1
 		else {
-			e.add_denom(number);
+			e.add_denom(number); // добавляем четное число
 			number -= 2;
 			cnt = 0;
 		}
-		e.flip();
+		e.flip(); // меняем числитель и знаменатель местами
 	}
-	e.add_denom();
+	// повторяем действия для первой "1" в цепной дроби
+	e.add_denom(); 
 	e.flip();
 
+	// вывод
 	if (out) {
 		bool irrational = input_mode("irrational");
 
@@ -74,7 +81,8 @@ void compute_exp_with_fraction(unsigned int number, bool out = false) {
 	}
 }
 
-
+// проверка сгенерированного числа e с уже имеющимся файлом,
+// где рассчитано 2 млн знаков e
 void check(const char* filename1, const char* filename2) {
 
 	ifstream file1(filename1);
@@ -95,6 +103,7 @@ void check(const char* filename1, const char* filename2) {
 
 }
 
+// шаблон запроса у пользователя информации о выводе
 bool input_mode(const char* text) {
 	char mode = 0;
 	while (mode != 'y' && mode != 'n') {
