@@ -149,8 +149,7 @@ void Vector<T>::insert(const int index, const Vector<T>& other) {
 	_size += other._size;
 }
 
-// Поскольку const T& жалуется на Vector
-// пишется отдельное определение
+// вставка другого вектора
 template<typename T>
 void Vector<T>::push_back(const Vector& other) {
 	insert(_size, other);
