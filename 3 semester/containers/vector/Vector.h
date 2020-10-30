@@ -32,6 +32,7 @@ public:
 	void insert(const int, const T&);
 	void insert(const int index, const Vector& other);
 	void push_back(const T&);
+	void push_back(const Vector& other);
 	void remove(const int);
 	void pop_back();
 	void clear();
@@ -52,7 +53,7 @@ public:
 	bool operator==(const Vector&) const;
 
 	// output
-	friend ostream& operator<< (ostream&, const Vector&);
+	friend ostream& operator << (ostream&, const Vector&);
 
 };
 
@@ -80,6 +81,7 @@ Vector<T>::Vector(const int start_capacity, const T& value) {
 
 	for (T* temp_ptr = ptr; temp_ptr != (ptr + start_capacity); temp_ptr++)
 		*temp_ptr = value;
+	_size = start_capacity;
 }
 
 // конструктор копирования
@@ -142,9 +144,14 @@ void Vector<T>::insert(const int index, const Vector<T>& other) {
 		ptr[i] = ptr[i - other._size];
 
 	for (int i = other._size - 1; i >= 0; i--)
-		ptr[index + i + 1] = other.ptr[i];
+		ptr[index + i] = other.ptr[i];
 
-	size += other._size;
+	_size += other._size;
+}
+
+template<typename T>
+void Vector<T>::push_back(const Vector& other) {
+	insert(_size, other);
 }
 
 template<typename T>
@@ -170,8 +177,8 @@ void Vector<T>::remove(const int index) {
 		throw VectorException();
 	for (int i = index; i < _size - 1; i++)
 		ptr[i] = ptr[i + 1];
-	ptr[size - 1] = 0;
-	size--;
+	ptr[_size - 1] = 0;
+	_size--;
 }
 
 template<typename T>
@@ -183,6 +190,7 @@ template<typename T>
 void Vector<T>::clear() {
 	for (T* temp = ptr; temp != (ptr + _size); temp++)
 		*temp = 0;
+	_size = 0;
 }
 
 
@@ -229,7 +237,7 @@ const Vector<T>& Vector<T>::operator=(const Vector<T>& other) {
 		ptr = new T[other._capacity];
 		_capacity = other._capacity;
 	}
-	size = other._size;
+	_size = other._size;
 	for (int i = 0; i < _size; i++)
 		ptr[i] = other.ptr[i];
 	return *this;
@@ -257,7 +265,7 @@ void Vector<T>::print(ostream& out, const char* end) {
 
 
 template<typename T>
-ostream& operator<< (ostream& out, const Vector<T>& obj) {
+ostream& operator << (ostream& out, const Vector<T>& obj) {
 	obj.print(out, "\n");
 	return out;
 }
