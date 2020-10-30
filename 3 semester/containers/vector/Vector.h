@@ -33,8 +33,8 @@ public:
 	void insert(const int index, const Vector& other);
 	void push_back(const T&);
 	void push_back(const Vector& other);
-	void remove(const int);
-	void pop_back();
+	T remove(const int);
+	T pop_back();
 	void clear();
 
 	void print(ostream&, const char* = " ") const;
@@ -149,7 +149,6 @@ void Vector<T>::insert(const int index, const Vector<T>& other) {
 	_size += other._size;
 }
 
-// вставка другого вектора
 template<typename T>
 void Vector<T>::push_back(const Vector& other) {
 	insert(_size, other);
@@ -173,18 +172,20 @@ void Vector<T>::increase_capacity(const int new_capacity) {
 }
 
 template<typename T>
-void Vector<T>::remove(const int index) {
+T Vector<T>::remove(const int index) {
 	if (index < 0 || index >= _size)
 		throw VectorException();
+	T removed_item = ptr[index];
 	for (int i = index; i < _size - 1; i++)
 		ptr[i] = ptr[i + 1];
 	ptr[_size - 1] = 0;
 	_size--;
+	return removed_item;
 }
 
 template<typename T>
-void Vector<T>::pop_back() {
-	remove(_size - 1);
+T Vector<T>::pop_back() {
+	return remove(_size - 1);
 }
 
 template<typename T>
@@ -222,11 +223,12 @@ void Vector<T>::resize(const int new_size) {
 	if (new_size <= _size)
 		for (int i = new_size + 1; i < _size; i++)
 			ptr[i] = 0;
-	else {
+	else
 		if (new_size > _capacity)
 			increase_capacity(new_size + 1);
-		_size = new_size;
-	}
+	
+	_size = new_size;
+
 }
 
 template<typename T>
@@ -255,16 +257,16 @@ bool Vector<T>::operator==(const Vector& other) const {
 }
 
 
-// style output
+
 template<typename T>
 void Vector<T>::print(ostream& out, const char* end) const {
 	out << "Total size: " << _size << std::endl;
 	for (int i = 0; i < _size; i++)
 		out << ptr[i] << end;
-	out << std::endl;
+	//out << std::endl;
 }
 
-// non-style output with <<
+
 template<typename T> 
 ostream& operator << (ostream& out, Vector<T>& obj) {
 	obj.print(out, "\n");
