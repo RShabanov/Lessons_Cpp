@@ -37,7 +37,7 @@ public:
 	void pop_back();
 	void clear();
 
-	void print(ostream&, const char* = " ");
+	void print(ostream&, const char* = " ") const;
 
 	// check
 	bool is_empty() const;
@@ -53,7 +53,7 @@ public:
 	bool operator==(const Vector&) const;
 
 	// output
-	friend ostream& operator << (ostream&, const Vector&);
+	template<typename T> friend ostream& operator << (ostream&, Vector&);
 
 };
 
@@ -149,6 +149,8 @@ void Vector<T>::insert(const int index, const Vector<T>& other) {
 	_size += other._size;
 }
 
+// Поскольку const T& жалуется на Vector
+// пишется отдельное определение
 template<typename T>
 void Vector<T>::push_back(const Vector& other) {
 	insert(_size, other);
@@ -254,18 +256,18 @@ bool Vector<T>::operator==(const Vector& other) const {
 }
 
 
-
+// style output
 template<typename T>
-void Vector<T>::print(ostream& out, const char* end) {
+void Vector<T>::print(ostream& out, const char* end) const {
 	out << "Total size: " << _size << std::endl;
 	for (int i = 0; i < _size; i++)
 		out << ptr[i] << end;
 	out << std::endl;
 }
 
-
-template<typename T>
-ostream& operator << (ostream& out, const Vector<T>& obj) {
+// non-style output with <<
+template<typename T> 
+ostream& operator << (ostream& out, Vector<T>& obj) {
 	obj.print(out, "\n");
 	return out;
 }
