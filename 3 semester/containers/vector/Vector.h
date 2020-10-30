@@ -4,7 +4,7 @@
 #include "VectorException.h"
 //using std::ostream;
 using namespace std;
-using ull = unsigned long long;
+//using ull = unsigned long long;
 
 
 const int DEFAULT_CAPACITY = 8;
@@ -13,17 +13,16 @@ template<typename T>
 class Vector
 {
 
-	ull _size, _capacity;
-	static const ull _max_size = ULLONG_MAX;
+	int _size, _capacity;
+	static const int _max_size = INT_MAX;
 	T* ptr = nullptr;
-
 
 	void common_constructor(int);
 	void increase_capacity(const int);
 
 public:
 	Vector(int = 0);
-	Vector(int, const T& = 0);
+	Vector(int, const T&);
 	Vector(const Vector& other);
 	~Vector();
 
@@ -32,23 +31,10 @@ public:
 	T& at(const int) const;
 
 	// modification
-	void insert(const ull, const T&);
-	void insert(const ull index, const Vector& other) {
-		if (index < 0 || index > _size)
-			throw VectorException();
-		if ((_size + other._size) == _capacity)
-			increase_capacity(_size + other._size + 1);
-
-		for (long long i = _size + other._size - 1; i >= index + other._size; i--)
-			ptr[i] = ptr[i - other._size];
-
-		for (long long i = other._size - 1; i >= 0; i--)
-			ptr[index + i + 1] = other.ptr[i];
-
-		size += other._size;
-	}
+	void insert(const int, const T&);
+	void insert(const int index, const Vector& other);
 	void push_back(const T&);
-	void remove(const ull);
+	void remove(const int);
 	void pop_back();
 	void clear();
 
@@ -56,17 +42,17 @@ public:
 	bool is_empty() const;
 
 	// size stuff
-	void resize(const ull);
-	ull max_size() const;
-	ull size() const;
-	ull capacity() const;
+	void resize(const int);
+	int max_size() const;
+	int size() const;
+	int capacity() const;
 
 	// operators
 	const Vector& operator=(const Vector&);
 	bool operator==(const Vector&) const;
 
 	// output
-	friend ostream& operator<<(ostream&, const Vector&);
+	friend ostream& operator<< (ostream&, const Vector&);
 
 };
 
@@ -96,19 +82,19 @@ Vector<T>::Vector(const int start_capacity, const T& value) {
 		*temp_ptr = value;
 }
 
-// copy constructor
+// конструктор копирования
 template<typename T>
 Vector<T>::Vector(const Vector<T>& other) {
 	_size = other._size;
 	_capacity = other._capacity;
 	ptr = new T[_capacity];
 
-	for (ull i = 0; i < _capacity; i++)
+	for (int i = 0; i < _capacity; i++)
 		ptr[i] = other.ptr[i];
 }
 
 
-// destructor
+// деструктор
 template<typename T>
 Vector<T>::~Vector() {
 	if (ptr != nullptr)
@@ -134,20 +120,36 @@ T& Vector<T>::at(const int index) const {
 // modifications
 
 template<typename T>
-void Vector<T>::insert(const ull index, const T& value) {
+void Vector<T>::insert(const int index, const T& value) {
 	if (index < 0 || index > _size)
 		throw VectorException();
 	if (_size == _capacity)
 		increase_capacity(_size + 1);
-	for (long long i = _size - 1; i >= index; i--)
+	for (int i = _size - 1; i >= index; i--)
 		ptr[i + 1] = ptr[i];
 	_size++;
 	ptr[index] = value;
 }
 
 template<typename T>
+void Vector<T>::insert(const int index, const Vector<T>& other) {
+	if (index < 0 || index > _size)
+		throw VectorException();
+	if ((_size + other._size) == _capacity)
+		increase_capacity(_size + other._size + 1);
+
+	for (int i = _size + other._size - 1; i >= index + other._size; i--)
+		ptr[i] = ptr[i - other._size];
+
+	for (int i = other._size - 1; i >= 0; i--)
+		ptr[index + i + 1] = other.ptr[i];
+
+	size += other._size;
+}
+
+template<typename T>
 void Vector<T>::push_back(const T& value) {
-	insert(_size - 1, value);
+	insert(_size, value);
 }
 
 template<typename T>
@@ -156,17 +158,17 @@ void Vector<T>::increase_capacity(const int new_capacity) {
 		(_capacity << 1) : new_capacity;
 	
 	T* new_ptr = new T[_capacity];
-	for (ull i = 0; i < _size; i++)
+	for (int i = 0; i < _size; i++)
 		new_ptr[i] = ptr[i];
 	delete[] ptr;
 	ptr = new_ptr;
 }
 
 template<typename T>
-void Vector<T>::remove(const ull index) {
+void Vector<T>::remove(const int index) {
 	if (index < 0 || index >= _size)
 		throw VectorException();
-	for (ull i = index; i < _size - 1; i++)
+	for (int i = index; i < _size - 1; i++)
 		ptr[i] = ptr[i + 1];
 	ptr[size - 1] = 0;
 	size--;
@@ -185,17 +187,17 @@ void Vector<T>::clear() {
 
 
 template<typename T>
-ull Vector<T>::size() const {
+int Vector<T>::size() const {
 	return _size;
 }
 
 template<typename T>
-ull Vector<T>::max_size() const {
+int Vector<T>::max_size() const {
 	return _max_size;
 }
 
 template<typename T>
-ull Vector<T>::capacity() const {
+int Vector<T>::capacity() const {
 	return _capacity;
 }
 
@@ -205,11 +207,11 @@ bool Vector<T>::is_empty() const {
 }
 
 template<typename T>
-void Vector<T>::resize(const ull new_size) {
+void Vector<T>::resize(const int new_size) {
 	if (new_size < 0)
 		throw VectorException();
 	if (new_size <= _size)
-		for (ull i = new_size + 1; i < _size; i++)
+		for (int i = new_size + 1; i < _size; i++)
 			ptr[i] = 0;
 	else {
 		if (new_size > _capacity)
@@ -228,7 +230,7 @@ const Vector<T>& Vector<T>::operator=(const Vector<T>& other) {
 		_capacity = other._capacity;
 	}
 	size = other._size;
-	for (ull i = 0; i < _size; i++)
+	for (int i = 0; i < _size; i++)
 		ptr[i] = other.ptr[i];
 	return *this;
 }
@@ -236,7 +238,7 @@ const Vector<T>& Vector<T>::operator=(const Vector<T>& other) {
 template<typename T>
 bool Vector<T>::operator==(const Vector& other) const {
 	if (_size == other._size) {
-		for (ull i = 0; i < _size; i++)
+		for (int i = 0; i < _size; i++)
 			if (ptr[i] != other.ptr[i]) return false;
 		return true;
 	}
@@ -247,9 +249,9 @@ bool Vector<T>::operator==(const Vector& other) const {
 
 
 template<typename T>
-ostream& operator<<(ostream& out, const Vector<T>& obj) {
+ostream& operator<< (ostream& out, const Vector<T>& obj) {
 	out << "Total size: " << obj._size << std::endl;
-	for (ull i = 0; i < obj._size; i++)
+	for (int i = 0; i < obj._size; i++)
 		out << obj.ptr[i] << std::endl;
 	return out;
 }
