@@ -2,9 +2,7 @@
 #include <climits>
 #include <iostream>
 #include "VectorException.h"
-//using std::ostream;
-using namespace std;
-//using ull = unsigned long long;
+using std::ostream;
 
 
 const int DEFAULT_CAPACITY = 8;
@@ -37,6 +35,8 @@ public:
 	void remove(const int);
 	void pop_back();
 	void clear();
+
+	void print(ostream&, const char* = " ");
 
 	// check
 	bool is_empty() const;
@@ -247,11 +247,17 @@ bool Vector<T>::operator==(const Vector& other) const {
 
 
 
+template<typename T>
+void Vector<T>::print(ostream& out, const char* end) {
+	out << "Total size: " << _size << std::endl;
+	for (int i = 0; i < _size; i++)
+		out << ptr[i] << end;
+	out << std::endl;
+}
+
 
 template<typename T>
 ostream& operator<< (ostream& out, const Vector<T>& obj) {
-	out << "Total size: " << obj._size << std::endl;
-	for (int i = 0; i < obj._size; i++)
-		out << obj.ptr[i] << std::endl;
+	obj.print(out, "\n");
 	return out;
 }
