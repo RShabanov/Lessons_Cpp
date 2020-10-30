@@ -9,20 +9,40 @@ int main() {
 	for (int i = 0; i < 5; i++)
 		v.push_back(i + 1);
 
-//	cout << v << endl;
-	cout << v.size() << endl;
+	Vector<int> a(3, 10);
 
-	/*Vector<int> a;
-	for (int i = 5; i < 9; i++)
-		a.push_back(i);
+	cout << "Vector v:\n";
+	v.print(cout);
+	cout << endl << endl;
 
-	cout << a << endl;
-	cout << a.size() << endl;*/
+	cout << "Vector a:\n";
+	a.print(cout);
+	cout << endl << endl;
 
+	cout << "a.is_empty(): " << a.is_empty() << endl << endl;
 
-	//v.insert(2, a);
-	//cout << v << endl;
+	cout << "Vector v after adding vector a at the end: v.push_back(a)\n";
+	v.push_back(a);
+	v.print(cout);
+	cout << endl << endl;
 
+	cout << "Compare vectors v and a: v == a\n" << (v == a) << endl << endl;
+
+	cout << "v = a:\n";
+	v = a;
+	cout << v << endl << endl;
+
+	cout << "Vector v after removing the last element: v.pop_back()\n";
+	v.pop_back();
+	cout << v << endl << endl;
+
+	cout << "Vector v after inserting one element (56) at 2 position: v.insert(2, 56)\n";
+	v.insert(2, 56);
+	cout << v << endl << endl;
+
+	cout << "Vector v after resizing: v.resize(1)\n";
+	v.resize(1);
+	cout << v << endl << endl;
 
 	cin.get();
 	return 0;
