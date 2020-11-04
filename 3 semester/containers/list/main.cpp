@@ -1,12 +1,8 @@
 #include <iostream>
-#include "Vector.h"
 #include "LineList.h"
 #include "CircularLineList.h"
 using namespace std;
 
-
-
-void vector_test();
 
 void lineList_test();
 
@@ -19,7 +15,7 @@ int main() {
 	//circular_lineList_test();
 
 	//lineList_test();
-	//Josephus_problem();
+	Josephus_problem();
 	
 	cin.get();
 	cin.get();
@@ -46,9 +42,9 @@ void Josephus_problem() {
 	cout << "\nPeople: " << circle << endl;
 
 	do {
-		// это работает только из-за 1 строчки в delete_after():
+		// СЌС‚Рѕ СЂР°Р±РѕС‚Р°РµС‚ С‚РѕР»СЊРєРѕ РёР·-Р·Р° 1 СЃС‚СЂРѕС‡РєРё РІ delete_after():
 		// start = ptr->next;
-		// которая выполняется после удаления
+		// РєРѕС‚РѕСЂР°СЏ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРѕСЃР»Рµ СѓРґР°Р»РµРЅРёСЏ
 		LineListItem<int>* ptr = circle.get_start();
 		for (int i = 1; i < step - 1; i++)
 			ptr = ptr->get_next();
@@ -74,7 +70,6 @@ void circular_lineList_test() {
 	cout << "Size of the list: " << list.size() << endl;
 	cout << "List[2]: " << list[2] << endl;
 
-	cout << "ptr->get_data(): " << ptr->get_data() << endl;
 	list.delete_after(ptr);
 	cout << "Remove list[2]: " << list << endl;
 
@@ -97,7 +92,7 @@ void circular_lineList_test() {
 
 
 void lineList_test() {
-	LineList<int> list; // Указываем, список какого типа
+	LineList<int> list; // Г“ГЄГ Г§Г»ГўГ ГҐГ¬, Г±ГЇГЁГ±Г®ГЄ ГЄГ ГЄГ®ГЈГ® ГІГЁГЇГ 
 	cout << "Start: " << list << endl;
 	list.insert_first(10);
 	LineListItem<int>* ptr = list.get_start();
@@ -110,45 +105,4 @@ void lineList_test() {
 	cout << "List[2]: " << list[2] << endl;
 	//cout << "List[6]: " << list[6] << endl;
 
-}
-
-void vector_test() {
-	Vector<int> v;
-	for (int i = 0; i < 5; i++)
-		v.push_back(i + 1);
-
-	Vector<int> a(3, 10);
-
-	cout << "Vector v:\n";
-	v.print(cout);
-	cout << endl << endl;
-
-	cout << "Vector a:\n";
-	a.print(cout);
-	cout << endl << endl;
-
-	cout << "a.is_empty(): " << a.is_empty() << endl << endl;
-
-	cout << "Vector v after adding vector a at the end: v.push_back(a)\n";
-	v.push_back(a);
-	v.print(cout);
-	cout << endl << endl;
-
-	cout << "Compare vectors v and a: v == a\n" << (v == a) << endl << endl;
-
-	cout << "v = a:\n";
-	v = a;
-	cout << v << endl << endl;
-
-	cout << "Vector v after removing the last element: v.pop_back()\n";
-	v.pop_back();
-	cout << v << endl << endl;
-
-	cout << "Vector v after inserting one element (56) at 2 position: v.insert(2, 56)\n";
-	v.insert(2, 56);
-	cout << v << endl << endl;
-
-	cout << "Vector v after resizing: v.resize(1)\n";
-	v.resize(1);
-	cout << v << endl << endl;
 }
