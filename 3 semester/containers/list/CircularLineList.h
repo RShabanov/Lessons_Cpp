@@ -29,9 +29,9 @@ CircularLineList<T>::~CircularLineList() {
 		delete_first();
 }
 
-// т.к. используется однонаправленный список
-// приходится перебирать элементы в поисках элемента
-// указывающего на текущий элемент
+// С‚.Рє. РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РѕРґРЅРѕРЅР°РїСЂР°РІР»РµРЅРЅС‹Р№ СЃРїРёСЃРѕРє
+// РїСЂРёС…РѕРґРёС‚СЃСЏ РїРµСЂРµР±РёСЂР°С‚СЊ СЌР»РµРјРµРЅС‚С‹ РІ РїРѕРёСЃРєР°С… СЌР»РµРјРµРЅС‚Р°
+// СѓРєР°Р·С‹РІР°СЋС‰РµРіРѕ РЅР° С‚РµРєСѓС‰РёР№ СЌР»РµРјРµРЅС‚
 template<typename T>
 LineListItem<T>* CircularLineList<T>::get_prestart() {
 	LineListItem<T>* ptr = start;
@@ -45,8 +45,8 @@ LineListItem<T>* CircularLineList<T>::get_prestart() {
 template<typename T>
 void CircularLineList<T>::delete_first() {
 	if (start) {
-		// если удаляется последний элемент
-		// убираем замкнутость
+		// РµСЃР»Рё СѓРґР°Р»СЏРµС‚СЃСЏ РїРѕСЃР»РµРґРЅРёР№ СЌР»РµРјРµРЅС‚
+		// СѓР±РёСЂР°РµРј Р·Р°РјРєРЅСѓС‚РѕСЃС‚СЊ
 		if (start->next == start)
 			start->next = nullptr;
 		else {
@@ -66,7 +66,9 @@ void CircularLineList<T>::delete_after(LineListItem<T>* ptr) {
 			delete_first();
 		else {
 			LineList<T>::delete_after(ptr);
-			start = ptr->next;
+			
+			// РўРѕР»СЊРєРѕ РґР»СЏ Р·Р°РґР°С‡Рё РРѕСЃРёС„Р° Р¤Р»Р°РІРёСЏ
+			// start = ptr->next;
 		}
 	}
 	else throw LineListException();
@@ -74,7 +76,7 @@ void CircularLineList<T>::delete_after(LineListItem<T>* ptr) {
 
 template<typename T>
 void CircularLineList<T>::insert_first(const T& data) {
-	// особый случай, т.к. get_prestart() сломается в этом случае
+	// РѕСЃРѕР±С‹Р№ СЃР»СѓС‡Р°Р№, С‚.Рє. get_prestart() СЃР»РѕРјР°РµС‚СЃСЏ РІ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ
 	if (LineList<T>::size() == 0) {
 		LineList<T>::insert_first(data);
 		start->next = start;
