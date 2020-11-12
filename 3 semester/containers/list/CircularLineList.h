@@ -15,8 +15,9 @@ public:
 	~CircularLineList();
 
 	void delete_first();
-	void delete_after(LineListItem<T>*);
+	typename LineList<T>::iterator delete_after(typename LineList<T>::iterator);
 	void insert_first(const T&);
+
 
 };
 
@@ -60,18 +61,19 @@ void CircularLineList<T>::delete_first() {
 }
 
 template<typename T>
-void CircularLineList<T>::delete_after(LineListItem<T>* ptr) {
-	if (ptr && ptr->next) {
+typename LineList<T>::iterator CircularLineList<T>::delete_after(typename LineList<T>::iterator ptr) {
+	if (ptr.ptr && ptr.ptr->next) {
 		if (start->next == start)
 			delete_first();
 		else {
 			LineList<T>::delete_after(ptr);
-			
+
 			// Только для задачи Иосифа Флавия
-			// start = ptr->next;
+			start = ptr.ptr->next;
 		}
 	}
 	else throw LineListException();
+	return LineList<T>::iterator(start);
 }
 
 template<typename T>
