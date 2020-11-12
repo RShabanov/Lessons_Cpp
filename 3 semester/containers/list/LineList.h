@@ -13,7 +13,7 @@ class LineList
 
 protected:
 	LineListItem<T>* start;
-	
+
 public:
 	LineList();
 	~LineList();
@@ -21,14 +21,55 @@ public:
 	LineListItem<T>* get_start() const;
 	int size() const;
 
-	void delete_first();
-	void delete_after(LineListItem<T>*);
-	void insert_first(const T&);
-	void insert_after(LineListItem<T>*, const T&);
-
 	template<typename T> friend ostream& operator<<(ostream&, const LineList&);
-	
+
 	T operator[](int);
+
+	class iterator {
+		iterator();
+
+	protected:
+		LineListItem<T>* ptr;
+
+	public:
+		iterator(LineListItem<T>* _ptr) { ptr = _ptr; }
+		iterator(const LineList<T>::iterator& it) { ptr = it.ptr; }
+		~iterator() {}
+
+		iterator operator+(int n) {
+			iterator temp(*this);
+			return temp += n;
+		}
+		iterator& operator+=(int n) {
+			while (n--)
+				ptr = ptr->get_next();
+			return *this;
+		}
+		iterator& operator++() {
+			ptr = ptr->get_next();
+			return *this;
+		}
+		iterator operator++(int) {
+			iterator temp(*this);
+			ptr = ptr->get_next();
+			return temp;
+		}
+		iterator& operator=(const iterator& it) {
+			ptr = it.ptr;
+			return *this;
+		}
+		const T& operator*() { return ptr->get_data(); }
+
+		friend class LineList<T>;
+		friend class CircularLineList<T>;
+	};
+
+	iterator begin() { return iterator(start); }
+	void delete_first();
+	void delete_after(iterator);
+	void insert_first(const T&);
+	void insert_after(iterator, const T&);
+
 };
 
 
@@ -37,7 +78,7 @@ LineList<T>::LineList() { start = nullptr; list_size = 0; }
 
 template<typename T>
 LineList<T>::~LineList() {
-	while (start) 
+	while (start)
 		delete_first();
 }
 
@@ -63,10 +104,10 @@ void LineList<T>::insert_first(const T& data) {
 }
 
 template<typename T>
-void LineList<T>::delete_after(LineListItem<T>* ptr) {
-	if (ptr && ptr->next) {
-		LineListItem<T>* temp = ptr->next;
-		ptr->next = ptr->next->next;
+void LineList<T>::delete_after(iterator ptr) {
+	if (ptr.ptr && ptr.ptr->next) {
+		LineListItem<T>* temp = ptr.ptr->next;
+		ptr.ptr->next = ptr.ptr->next->next;
 		delete temp;
 		list_size--;
 	}
@@ -74,10 +115,10 @@ void LineList<T>::delete_after(LineListItem<T>* ptr) {
 }
 
 template<typename T>
-void LineList<T>::insert_after(LineListItem<T>* ptr, const T& data) {
-	if (ptr) {
-		LineListItem<T>* temp = ptr->next;
-		ptr->next = new LineListItem<T>(data, temp);
+void LineList<T>::insert_after(iterator ptr, const T& data) {
+	if (ptr.ptr) {
+		LineListItem<T>* temp = ptr.ptr->next;
+		ptr.ptr->next = new LineListItem<T>(data, temp);
 		list_size++;
 	}
 	else throw LineListException();
