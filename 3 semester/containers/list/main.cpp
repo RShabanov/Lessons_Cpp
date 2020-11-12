@@ -41,15 +41,12 @@ void Josephus_problem() {
 
 	cout << "\nPeople: " << circle << endl;
 
-	do {
-		// это работает только из-за 1 строчки в delete_after():
-		// start = ptr->next;
-		// которая выполняется после удаления
-		LineListItem<int>* ptr = circle.get_start();
-		for (int i = 1; i < step - 1; i++)
-			ptr = ptr->get_next();
-		circle.delete_after(ptr);
-	} while (--people != 1);
+	step -= 2;
+	// это работает только из-за 1 строчки в delete_after():
+	// start = ptr->next;
+	// которая выполняется после удаления
+	// delete_after() возвращает итератор, указывающий на новый старт
+	for (auto it = circle.begin() + step; circle.size() > 1; it = circle.delete_after(it) + step);
 	
 	cout << "Only person who can servive: " << circle << endl;
 }
