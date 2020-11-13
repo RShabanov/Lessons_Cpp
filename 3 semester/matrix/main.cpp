@@ -25,6 +25,7 @@ void matrix_test() {
 	M.print(cout); // единственное отличие функции print
 					// от перегруженного оператора << в том, что
 					// print выводит подробную информацию
+	cout << "M^4 " << pow(M, 4) << endl;
 	
 	int row, column;
 	cout << "Enter another matrix (by array):\n";
