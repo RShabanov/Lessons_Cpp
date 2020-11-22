@@ -1,89 +1,38 @@
 #include <iostream>
-#include <iomanip>
+#include <ctime>
 #include <fstream>
-#include "exp.h"
-
-
+#include "RationalExp.h"
 using namespace std;
 
-void compute_exp_with_fraction(const unsigned int, bool);
-void check(const char*, const char*);
-bool input_mode(const char*);
 
+void compare_e(const char* filename1, const char* filename2);
 
 int main() {
+	double start = clock();
+	RationalExp e(200000);
+	e.compute();
+	double end = (clock() - start) / 1e3;
+	cout << "Time:\t" << end << endl;
 	
-	unsigned int number;
+	ofstream time_file("time.txt", ios_base::app);
+	time_file << end << endl;
+	time_file.close();
 
-	// цепную дробь для е можно представить в виде бесконечной дроби
-	// [2; 1, 2, 1, 1, 4, 1, 1, 6, 1, 1, ..., 2n]
-	// здесь запрашивается у пользователя число 2n
-	// фактически, 2n - количество этажей
-	cout << "Enter even number (how many digits you need):\t";
-	while (!(cin >> number) || number % 2) {
-		if (cin.fail()) {
-			cin.clear();
-			cin.ignore(numeric_limits<streamsize>::max(), '\n');
-		}
-		cout << "Please, enter even integer:\t";
+
+	ofstream file("e_by_fractions.txt");
+	if (file.is_open()) {
+		e.output_irrational(file);
+		file.close();
 	}
 
-	compute_exp_with_fraction(number, input_mode("to output"));	
-
-	//check("rational_exp.txt", "e_2mil.txt");
-
+	compare_e("e_by_fractions.txt", "e_2mil.txt");
+	cout << "Done!\a\n";
+	
 	system("pause");
 	return 0;
 }
 
-
-// преобразуем цепную дробь в обычную
-// и выводим ее в консоль или файл (вариант выбирает пользователь)
-void compute_exp_with_fraction(unsigned int number, bool out = false) {
-
-	register int cnt = 0;
-	Exp e(number);
-
-	number -= 2;
-	while (number) {
-		if (cnt++ < 2) e.add_denom(); // добавляем 1
-		else {
-			e.add_denom(number); // добавляем четное число
-			number -= 2;
-			cnt = 0;
-		}
-		e.flip(); // меняем числитель и знаменатель местами
-	}
-	// повторяем действия для первой "1" в цепной дроби
-	e.add_denom(); 
-	e.flip();
-
-	// вывод
-	if (out) {
-		bool irrational = input_mode("irrational");
-
-		if (input_mode("console output")) {
-			if (irrational) {
-				cout << "\n2.";
-				e.output_irrational(cout);
-			}
-			else cout << endl << e << endl;
-		}
-		else {
-			ofstream out("rational_exp.txt");
-			if (irrational) {
-				out << "2.";
-				e.output_irrational(out);
-			}
-			else out << e << endl;
-			out.close();
-		}
-	}
-}
-
-// проверка сгенерированного числа e с уже имеющимся файлом,
-// где рассчитано 2 млн знаков e
-void check(const char* filename1, const char* filename2) {
+void compare_e(const char* filename1, const char* filename2) {
 
 	ifstream file1(filename1);
 	if (!file1.is_open()) {
@@ -101,15 +50,4 @@ void check(const char* filename1, const char* filename2) {
 	while (file1.get() == file2.get()) i++;
 	cout << "Mismatch at " << i++ << " position\n";
 
-}
-
-// шаблон запроса у пользователя информации о выводе
-bool input_mode(const char* text) {
-	char mode = 0;
-	while (mode != 'y' && mode != 'n') {
-		cout << "Do you want " << text << " [y/n]?: _\b";
-		cin >> mode;
-		cin.ignore(numeric_limits<streamsize>::max(), '\n');
-	}
-	return mode == 'y' ? 1 : 0;
 }
