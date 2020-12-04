@@ -155,7 +155,7 @@ Matrix<T> Matrix<T>::operator+(const Matrix<T>& M) const {
 
 template<typename T>
 Matrix<T>& Matrix<T>::operator+=(const Matrix<T>& M) {
-	if (matrix && M) {
+	if (matrix && M && this->row == M.row && this->column == M.column) {
 		for (int i = 0; i < row; i++)
 			for (int j = 0; j < column; j++)
 				matrix[i][j] += M.matrix[i][j];
