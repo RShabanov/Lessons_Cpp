@@ -60,13 +60,14 @@ void Map::prepare_data() {
 
 void Map::draw_path(int** matrix, Point& start) {
 	int length = matrix[start.row][start.column];
-	int dx[4]{ -1, 0, 0, 1 };
-	int dy[4]{ 0, -1, 1, 0 };
+	/*int dx[4]{ -1, 0, 0, 1 };
+	int dy[4]{ 0, -1, 1, 0 };*/
 
 	while (length > 0) {
 		data[start.row][start.column].set_color(0xE64A19);
 
-		for (int i = 0; i < 4; i++) {
+		// Окрестность фон Неймана
+		/*for (int i = 0; i < 4; i++) {
 			int new_row = start.row + dx[i],
 				new_col = start.column + dy[i];
 			if ((length - matrix[new_row][new_col]) == 1) {
@@ -74,7 +75,20 @@ void Map::draw_path(int** matrix, Point& start) {
 				start.column = new_col;
 				break;
 			}
-		}
+		}*/
+
+		// Окрестность Мура
+		for (int i = -1; i < 2; i++)
+			for (int j = -1; j < 2; j++) {
+				int new_row = start.row + i,
+					new_col = start.column + j;
+				if ((length - matrix[new_row][new_col]) == 1) {
+					start.row = new_row;
+					start.column = new_col;
+					break;
+				}
+			}
+
 		length--;
 	}
 }
@@ -122,14 +136,15 @@ void Map::wave_algorithm() {
 	std::queue<Point> points;
 	points.push(start_p);
 
-	int dx[4]{ -1, 0, 0, 1 };
-	int dy[4]{ 0, -1, 1, 0 };
+	/*int dx[4]{ -1, 0, 0, 1 };
+	int dy[4]{ 0, -1, 1, 0 };*/
 
 	Point current_p;
 	while (!points.empty()) {
 		current_p = points.front();
 
-		for (int i = 0; i < 4; i++) {
+		// Окрестность фон Неймана
+		/*for (int i = 0; i < 4; i++) {
 			int new_row = current_p.row + dx[i],
 				new_col = current_p.column + dy[i];
 
@@ -145,7 +160,29 @@ void Map::wave_algorithm() {
 				matrix[new_row][new_col] += matrix[current_p.row][current_p.column] + 1;
 				points.push(Point(new_row, new_col));
 			}
-		}
+		}*/
+
+		// Окрестность Мура
+		for (int i = -1; i < 2; i++)
+			for (int j = -1; j < 2; j++) {
+				int new_row = current_p.row + i,
+					new_col = current_p.column + j;
+
+				if (is_good_cell(matrix, new_row, new_col) &&
+					(new_row != start_p.row || new_col != start_p.column)) {
+
+					if (matrix[new_row][new_col] == finish) {
+						matrix[new_row][new_col] = matrix[current_p.row][current_p.column] + 1;
+						current_p.row = new_row;
+						current_p.column = new_col;
+						goto FIND_PATH;
+					}
+					matrix[new_row][new_col] += matrix[current_p.row][current_p.column] + 1;
+					points.push(Point(new_row, new_col));
+				}
+			}
+
+
 		points.pop();
 	}
 
