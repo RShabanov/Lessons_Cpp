@@ -57,5 +57,7 @@ public:
 	void add_denom(const unsigned int& n = 1);
 
 	void compute();
+	void compute2(const int& stop, int iter = 1);
+
 };
 
