@@ -283,3 +283,49 @@ void RationalExp::output_irrational(std::ostream& out) {
 		out << irrational->number[i];
 	out << std::endl;
 }
+
+
+
+
+int cnt = 1;
+int it = 0;
+BigInt* Q = nullptr;
+BigInt* _temp = nullptr;
+
+void RationalExp::compute2(const int& stop, int iter) {
+	if (iter == stop + 2) {
+		// TODO
+		// постараться убрать лишний проход с 1
+		numer->number[capacity - 1] = 1;
+		denom->number[capacity - 1] = 1;
+		//b->push_back(-1);
+		Q = denom;
+		//it -= 2;
+		return;
+	}
+
+	if (cnt & 2) {
+		cnt = 0;
+		it += 2;
+		compute2(stop, it);
+	}
+	else {
+		cnt++;
+		compute2(stop);
+	}
+	denom = Q;
+
+	_temp = new BigInt(*numer);
+	if (iter > 1) {
+		numer->multiply(iter);
+		it -= 2;
+	}
+	numer->add(*denom);
+
+	BigInt* _temp_ptr = denom;
+	denom = _temp;
+	_temp = _temp_ptr;
+
+	Q = denom;
+	delete _temp;
+}
