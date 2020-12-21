@@ -69,7 +69,7 @@ Polynomial<T> Polynomial<T>::deriv(int n) const {
 template<typename T>
 vector<double> Polynomial<T>::roots() const {
 	// TODO
-	// реализовать работу с комплексными числами?
+	// Г°ГҐГ Г«ГЁГ§Г®ГўГ ГІГј Г°Г ГЎГ®ГІГі Г± ГЄГ®Г¬ГЇГ«ГҐГЄГ±Г­Г»Г¬ГЁ Г·ГЁГ±Г«Г Г¬ГЁ?
 
 	if (degree == 0) return vector<double>();
 	vector<double> r;
@@ -86,7 +86,7 @@ vector<double> Polynomial<T>::roots() const {
 	}
 	else {
 		// TODO 
-		// реализовать нахождение корней полинома
+		// Г°ГҐГ Г«ГЁГ§Г®ГўГ ГІГј Г­Г ГµГ®Г¦Г¤ГҐГ­ГЁГҐ ГЄГ®Г°Г­ГҐГ© ГЇГ®Г«ГЁГ­Г®Г¬Г 
 	}
 
 	return r;
@@ -104,8 +104,11 @@ double Polynomial<T>::calculate(const double& x) const {
 
 template<typename T>
 const Polynomial<T>& Polynomial<T>::operator=(const Polynomial<T>& P) {
-	coeff = P.coeff;
-	degree = P.degree;
+	if (this != &P) {
+		coeff = P.coeff;
+		degree = P.degree;
+	}
+	return *this;
 }
 
 
