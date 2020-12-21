@@ -78,8 +78,11 @@ double Exp<T>::max(double x1, double x2) const {
 
 template<typename T>
 const Exp<T>& Exp<T>::operator=(const Exp<T>& E) {
-	C = E.C;
-	coeff = E.coeff;
+	if (this != &E) {
+		C = E.C;
+		coeff = E.coeff;
+	}
+	return *this;
 }
 
 
