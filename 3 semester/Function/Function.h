@@ -22,7 +22,7 @@ class Function {
 protected:
 	vector<T> coeff;
 	// TODO
-	// * парсинг строки
+	// * ГЇГ Г°Г±ГЁГ­ГЈ Г±ГІГ°Г®ГЄГЁ
 	// Function(const string& _f);
 	Function(const vector<T>& _c);
 	Function(const Function& F);
@@ -35,8 +35,6 @@ public:
 	virtual double calculate(const double&) const = 0;
 	virtual double min(double x1, double x2) const = 0;
 	virtual double max(double x1, double x2) const = 0;
-
-	template <typename OT> friend std::ostream& operator<<(std::ostream&, const Function&);
 };
 
 
@@ -68,13 +66,4 @@ Function<T>::Function(const Function<T>& F) {
 		}
 	}
 	else throw FunctionException();
-}
-
-
-template<typename OT>
-std::ostream& operator<<(std::ostream& out, const Function<OT>& F) {
-	out << "Functions coefficients: ";
-	for (OT item : F.coeff) out << item << " ";
-	out << std::endl;
-	return out;
 }
