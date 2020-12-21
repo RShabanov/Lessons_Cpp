@@ -80,9 +80,12 @@ double Hyperbola<T>::max(double x1, double x2) const {
 
 template<typename T>
 const Hyperbola<T>& Hyperbola<T>::operator=(const Hyperbola<T>& H) {
-	k = H.k;
-	C = H.C;
-	coeff = H.coeff;
+	if (this != &H) {
+		k = H.k;
+		C = H.C;
+		coeff = H.coeff;
+	}
+	return *this;
 }
 
 
