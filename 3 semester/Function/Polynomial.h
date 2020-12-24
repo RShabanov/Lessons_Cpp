@@ -18,7 +18,7 @@ public:
 	int get_degree() const { return degree; }
 
 	Polynomial<T> deriv(int n = 1) const;
-	vector<double> roots() const;
+	//vector<double> roots() const;
 	double calculate(const double&) const;
 	double min(double x1, double x2) const;
 	double max(double x1, double x2) const;
@@ -66,32 +66,6 @@ Polynomial<T> Polynomial<T>::deriv(int n) const {
 	return Polynomial(deriv_coeff);
 }
 
-template<typename T>
-vector<double> Polynomial<T>::roots() const {
-	// TODO
-	// ðåàëèçîâàòü ðàáîòó ñ êîìïëåêñíûìè ÷èñëàìè?
-
-	if (degree == 0) return vector<double>();
-	vector<double> r;
-	if (degree == 1) r.push_back(coeff[1]);
-	else if (degree == 2) {
-		double D = coeff[1] * coeff[1] - 4 * coeff[0] * coeff[2];
-		if (D > 0) {
-			D = sqrt(D);
-			r.push_back((-coeff[1] - D) / 2);
-			r.push_back((-coeff[1] + D) / 2);
-		}
-		else if (D == 0) r.push_back(-coeff[1] / 2);
-		else throw FunctionException();
-	}
-	else {
-		// TODO 
-		// ðåàëèçîâàòü íàõîæäåíèå êîðíåé ïîëèíîìà
-	}
-
-	return r;
-}
-
 
 template<typename T>
 double Polynomial<T>::calculate(const double& x) const {
@@ -115,34 +89,28 @@ const Polynomial<T>& Polynomial<T>::operator=(const Polynomial<T>& P) {
 template<typename T>
 double Polynomial<T>::min(double x1, double x2) const {
 	if (x1 > x2) throw FunctionException();
-	double min_var = calculate(x1), temp = 0;
-	vector<double> r = deriv().roots();
-	for (double root : r)
-		if (root > x1 && root < x2) {
-			temp = calculate(root);
-			if (temp < min_var) min_var = temp;
-		}
-	temp = calculate(x2);
-	if (temp < min_var) min_var = temp;
-
-	return min_var;
+	
+	double minimum = calculate(x1);
+	x1 += 0.001;
+	for (x1; x1 <= x2; x1 += 0.001) {
+		double temp = calculate(x1);
+		if (temp < minimum) minimum = temp;
+	}
+	return minimum;
 }
 
 template<typename T>
 double Polynomial<T>::max(double x1, double x2) const {
 	if (x1 > x2) throw FunctionException();
-	double max_var = calculate(x1), temp = 0;
-	vector<double> r = deriv().roots();
+	
+	double maximum = calculate(x1);
+	x1 += 0.001;
+	for (x1; x1 <= x2; x1 += 0.001) {
+		double temp = calculate(x1);
+		if (temp > maximum) maximum = temp;
+	}
 
-	for (double root : r)
-		if (root > x1 && root < x2) {
-			temp = calculate(root);
-			if (temp > max_var) max_var = temp;
-		}
-	temp = calculate(x2);
-	if (temp > max_var) max_var = temp;
-
-	return max_var;
+	return maximum;
 }
 
 
