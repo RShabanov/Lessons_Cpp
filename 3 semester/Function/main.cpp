@@ -10,10 +10,9 @@ int main() {
 
 	Polynomial<int> poly({ 1,2,3,4,5 });
 	cout << "poly:\t" << poly << endl;
-
 	cout << "poly(10):\t" << poly.calculate(10) << endl;
-
-	cout << "poly'2:\t" << poly.deriv(2) << endl;
+	cout << "min(-2, 1):\t" << poly.min(-2, 1) << endl;
+	cout << "min(1, 2):\t" << poly.min(1, 2) << endl;
 
 	cout << "=======================================\n\n";
 
