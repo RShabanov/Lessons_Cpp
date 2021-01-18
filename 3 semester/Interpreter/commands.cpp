@@ -82,10 +82,10 @@ void Cmd::cmd_print() {
 	parser.read_token();
 	if (token[0] == '(') {
 		std::string result_str;
-		out_string(result_str); // подготовить строку к выводу
+		out_string(result_str); // РїРѕРґРіРѕС‚РѕРІРёС‚СЊ СЃС‚СЂРѕРєСѓ Рє РІС‹РІРѕРґСѓ
 
 		if (token[0] == ')')
-			std::cout << result_str; //  << std::endl
+			std::cout << result_str;
 		else throw Exception(EXTRA_BRACKET);
 	}
 	else throw Exception(INVALID_SYNTAX);
@@ -93,7 +93,7 @@ void Cmd::cmd_print() {
 
 
 void Cmd::cmd_input() {
-	// ограничимся пока вводом double
+	// РѕРіСЂР°РЅРёС‡РёРјСЃСЏ РїРѕРєР° РІРІРѕРґРѕРј double
 	register char* start = program;
 
 	parser.read_token();
@@ -122,7 +122,7 @@ void Cmd::cmd_input() {
 
 
 void Cmd::cmd_let() {
-	// на вход program указывает на "var = 5"
+	// РЅР° РІС…РѕРґ program СѓРєР°Р·С‹РІР°РµС‚ РЅР° "var = 5"
 	std::vector<std::string> var_map;
 
 	try {
@@ -211,7 +211,6 @@ void Cmd::cmd_else() {
 	}
 	else throw Exception(ELSE_WITHOUT_IF);
 }
-
 
 
 void Cmd::cmd_while() {
@@ -366,6 +365,11 @@ bool Cmd::is_return_cmd(int cmd_tok) {
 	return return_cmd.find(cmd_tok) != return_cmd.end();
 }
 
+bool Cmd::is_logic_oper(int _tok) {
+	if (_tok == AND || _tok == OR || _tok == NOT)
+		return true;
+	return false;
+}
 
 void Cmd::define_variable() {
 	register char* line = program - token.length();
@@ -533,12 +537,6 @@ void Cmd::jump_to_another_word() {
 	do {
 		parser.read_token();
 	} while (!parser.is_eof() && token_type != STRING);
-}
-
-bool Cmd::is_logic_oper(int _tok) {
-	if (_tok == AND || _tok == OR || _tok == NOT)
-		return true;
-	return false;
 }
 
 void Cmd::clear() {
@@ -710,6 +708,17 @@ inline bool Executive::not_executive() const {
 		parser.is_expression(token[0]);
 }
 
+inline bool Executive::contains_number(char symbol) const {
+	return isdigit(symbol) || symbol == '-' ||
+		symbol == '+';
+}
+
+inline bool Executive::contains_alnum(std::string& expr) const {
+	for (auto symbol : expr)
+		if (isalnum(symbol))
+			return true;
+	return false;
+}
 
 bool Executive::get_condition_not() {
 	register size_t parenthesis_cnt = 0;
@@ -794,7 +803,6 @@ double Executive::get_number(std::string& expr) {
 }
 
 
-
 double Executive::get_value() {
 	register double res;
 	register char* temp = program - token.length();
@@ -852,18 +860,6 @@ void Executive::invert_opers() {
 		token = "<=";
 		break;
 	}
-}
-
-inline bool Executive::contains_number(char symbol) const {
-	return isdigit(symbol) || symbol == '-' ||
-		symbol == '+';
-}
-
-inline bool Executive::contains_alnum(std::string& expr) const {
-	for (auto symbol : expr)
-		if (isalnum(symbol))
-			return true;
-	return false;
 }
 
 
@@ -930,12 +926,12 @@ void FunFunctor::execute(std::vector<double>& values) {
 }
 
 void FunFunctor::add_fun_vars(std::vector<double>& values) {
-	// сопоставляет переменные со значениями
+	// СЃРѕРїРѕСЃС‚Р°РІР»СЏРµС‚ РїРµСЂРµРјРµРЅРЅС‹Рµ СЃРѕ Р·РЅР°С‡РµРЅРёСЏРјРё
 	// (let a, b, c)
 	// (	1, 2, 3), e.g.
-	// т.к. проверка на корректность формы
-	// происходит перед данной функцией,
-	// то здесь ее можно опустить
+	// С‚.Рє. РїСЂРѕРІРµСЂРєР° РЅР° РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚СЊ С„РѕСЂРјС‹
+	// РїСЂРѕРёСЃС…РѕРґРёС‚ РїРµСЂРµРґ РґР°РЅРЅРѕР№ С„СѓРЅРєС†РёРµР№,
+	// С‚Рѕ Р·РґРµСЃСЊ РµРµ РјРѕР¶РЅРѕ РѕРїСѓСЃС‚РёС‚СЊ
 
 	parser.read_token(); // skip '('
 	parser.read_token(); // skip "let" if it is
