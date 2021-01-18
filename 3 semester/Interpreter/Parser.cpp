@@ -4,10 +4,7 @@
 // -------------------------------
 Parser parser;
 
-Parser::Parser() {
-	//token_type = 0;
-	//prog_start = program = 0;
-}
+Parser::Parser() {}
 
 Parser::~Parser() {}
 
@@ -101,7 +98,7 @@ void Parser::parse_mul_div(double& result) {
 			break;
 		case '%':
 			// TODO
-			// реализовать операцию деления по модулю
+			// СЂРµР°Р»РёР·РѕРІР°С‚СЊ РѕРїРµСЂР°С†РёСЋ РґРµР»РµРЅРёСЏ РїРѕ РјРѕРґСѓР»СЋ
 			break;
 		}
 
@@ -173,13 +170,13 @@ void Parser::read_values(double& result) {
 }
 
 
-// чтение следующего токена
+// С‡С‚РµРЅРёРµ СЃР»РµРґСѓСЋС‰РµРіРѕ С‚РѕРєРµРЅР°
 void Parser::read_token() {
 	token.clear();
 	token_type = 0;
 	tok = 0;
 
-	skip_space(); // добавить сюда экранированные символы ???
+	skip_space();
 
 	if (is_eof(*program)) token_eof();
 	else if (is_cr(*program)) token_cr();
