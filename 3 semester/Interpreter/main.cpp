@@ -11,16 +11,16 @@ int main(int argc, char* argv[]) {
 	using namespace std;
 
 	Scanner scanner;
-	//scanner.run("./tests/test.txt");
+	scanner.run("./tests/fun/fun_10.txt");
 
-	if (argc > 1) {
+	/*if (argc > 1) {
 		for (int i = 1; i < argc; i++) {
 			cout << "--------------------------" << endl;
 			cout << argv[i] << endl << endl;
 			scanner.run(argv[i]);
 		}
 	}
-	else run_all_tests(scanner);
+	else run_all_tests(scanner);*/
 
 	return 0;
 }

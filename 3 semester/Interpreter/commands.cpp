@@ -1,7 +1,7 @@
 #include "commands.h"
 
 
-
+double return_value = NAN;
 Executive exec;
 // ----------------------------------
 
@@ -275,6 +275,11 @@ void Cmd::cmd_fun() {
 
 void Cmd::cmd_return() {
 	register double res = exec.compute_expr();
+	return_value = res;
+	//
+	//parser.skip_eol();
+	//parser.read_token();
+	//
 
 	if (parser.is_end() || token[0] == '}') {
 		while (*program) {
@@ -653,8 +658,12 @@ double Executive::compute_expr() {
 		}
 		else if (fun.is_fun(token)) {
 			execute_fun(token);
-			if (contains_number(token[0]))
-				temp += token;
+			/*if (contains_number(token[0]))
+				temp += token;*/
+			if (tok == RETURN) {
+				temp += std::to_string(return_value);
+				return_value = NAN;
+			}
 			else throw Exception(INVALID_TYPE);
 		}
 		else if (token_type == STRING)
@@ -841,12 +850,6 @@ void Executive::invert_opers() {
 		break;
 	case LE:
 		token = "<=";
-		break;
-	case AND:
-		token = "&&";
-		break;
-	case OR:
-		token = "||";
 		break;
 	}
 }
