@@ -5,5 +5,5 @@
 extern char* program, *prog_start;
 
 extern std::string token;
-extern int token_type; // содержит тип элемента
-extern int tok; // содержит внутреннее представление элемента 
+extern int token_type; // СЃРѕРґРµСЂР¶РёС‚ С‚РёРї СЌР»РµРјРµРЅС‚Р°
+extern int tok; // СЃРѕРґРµСЂР¶РёС‚ РІРЅСѓС‚СЂРµРЅРЅРµРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ СЌР»РµРјРµРЅС‚Р° 
