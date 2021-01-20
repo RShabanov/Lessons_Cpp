@@ -98,7 +98,7 @@ void Parser::parse_mul_div(double& result) {
 			break;
 		case '%':
 			// TODO
-			// СЂРµР°Р»РёР·РѕРІР°С‚СЊ РѕРїРµСЂР°С†РёСЋ РґРµР»РµРЅРёСЏ РїРѕ РјРѕРґСѓР»СЋ
+			// реализовать операцию деления по модулю
 			break;
 		}
 
@@ -170,7 +170,7 @@ void Parser::read_values(double& result) {
 }
 
 
-// С‡С‚РµРЅРёРµ СЃР»РµРґСѓСЋС‰РµРіРѕ С‚РѕРєРµРЅР°
+// чтение следующего токена
 void Parser::read_token() {
 	token.clear();
 	token_type = 0;

@@ -82,7 +82,7 @@ void Cmd::cmd_print() {
 	parser.read_token();
 	if (token[0] == '(') {
 		std::string result_str;
-		out_string(result_str); // РїРѕРґРіРѕС‚РѕРІРёС‚СЊ СЃС‚СЂРѕРєСѓ Рє РІС‹РІРѕРґСѓ
+		out_string(result_str); // подготовить строку к выводу
 
 		if (token[0] == ')')
 			std::cout << result_str;
@@ -93,7 +93,7 @@ void Cmd::cmd_print() {
 
 
 void Cmd::cmd_input() {
-	// РѕРіСЂР°РЅРёС‡РёРјСЃСЏ РїРѕРєР° РІРІРѕРґРѕРј double
+	// ограничимся пока вводом double
 	register char* start = program;
 
 	parser.read_token();
@@ -122,15 +122,15 @@ void Cmd::cmd_input() {
 
 
 void Cmd::cmd_let() {
-	// РЅР° РІС…РѕРґ program СѓРєР°Р·С‹РІР°РµС‚ РЅР° "var = 5"
+	// на вход program указывает на "var = 5"
 	std::vector<std::string> var_map;
 
 	try {
 		do {
 			parser.read_token();
 
-			if (token_type == STRING && !is_cmd(token, tok) &&
-				!fun.is_fun(token)) {
+			if ((token_type == STRING || !var.in_last_namespace(token)) && 
+				!is_cmd(token, tok) && !fun.is_fun(token)) {
 				var_map.push_back(token);
 				define_variable();
 			}
@@ -158,8 +158,7 @@ void Cmd::cmd_if() {
 	parser.read_token();
 
 	if (token[0] == '{') {
-		std::multimap<std::string, double> vars;
-		var.copy_to(vars);
+		var.create_namespace();
 
 		try {
 			if (condition) {
@@ -172,10 +171,10 @@ void Cmd::cmd_if() {
 				// to continue in the following branch if there is
 				following_branch();
 			}
-			var.restore_with_changes(vars);
+			var.delete_last_namespace();
 		}
 		catch (Exception& e) {
-			var.restore(vars);
+			var.delete_last_namespace();
 			throw e;
 		}
 	}
@@ -195,15 +194,14 @@ void Cmd::cmd_else() {
 		parser.read_token();
 
 		if (token[0] == '{') {
-			std::multimap<std::string, double> vars;
-			var.copy_to(vars);
+			var.create_namespace();
 
 			try {
 				exec.eval();
-				var.restore_with_changes(vars);
+				var.delete_last_namespace();
 			}
 			catch (Exception& e) {
-				var.restore(vars);
+				var.delete_last_namespace();
 				throw e;
 			}
 		}
@@ -219,8 +217,7 @@ void Cmd::cmd_while() {
 	bool condition = exec.compute_expr();
 
 	if (condition) {
-		std::multimap<std::string, double> vars;
-		var.copy_to(vars);
+		var.create_namespace();
 
 		try {
 			do {
@@ -231,14 +228,13 @@ void Cmd::cmd_while() {
 
 				exec.eval();
 				program = loop_start;
-
-				var.restore_with_changes(vars);
+				var.delete_last_namespace();
 			} while (exec.compute_expr());
 
 			skip_executive_block();
 		}
 		catch (Exception& e) {
-			var.restore(vars);
+			var.delete_last_namespace();
 			throw e;
 		}
 	}
@@ -900,8 +896,7 @@ void FunFunctor::operator()(const std::string& key) {
 }
 
 void FunFunctor::execute(std::vector<double>& values) {
-	std::multimap<std::string, double> vars;
-	var.copy_to(vars);
+	var.create_namespace();
 
 	auto temp_funs(fun.funs);
 
@@ -915,23 +910,23 @@ void FunFunctor::execute(std::vector<double>& values) {
 		else throw Exception(EXTRA_BRACKET);
 
 		fun.funs = temp_funs;
-		var.restore_with_changes(vars);
+		var.delete_last_namespace();
 		tok = RETURN;
 	}
 	catch (Exception& e) {
-		var.restore(vars);
+		var.delete_last_namespace();
 		fun.funs = temp_funs;
 		throw e;
 	}
 }
 
 void FunFunctor::add_fun_vars(std::vector<double>& values) {
-	// СЃРѕРїРѕСЃС‚Р°РІР»СЏРµС‚ РїРµСЂРµРјРµРЅРЅС‹Рµ СЃРѕ Р·РЅР°С‡РµРЅРёСЏРјРё
+	// сопоставляет переменные со значениями
 	// (let a, b, c)
 	// (	1, 2, 3), e.g.
-	// С‚.Рє. РїСЂРѕРІРµСЂРєР° РЅР° РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚СЊ С„РѕСЂРјС‹
-	// РїСЂРѕРёСЃС…РѕРґРёС‚ РїРµСЂРµРґ РґР°РЅРЅРѕР№ С„СѓРЅРєС†РёРµР№,
-	// С‚Рѕ Р·РґРµСЃСЊ РµРµ РјРѕР¶РЅРѕ РѕРїСѓСЃС‚РёС‚СЊ
+	// т.к. проверка на корректность формы
+	// происходит перед данной функцией,
+	// то здесь ее можно опустить
 
 	parser.read_token(); // skip '('
 	parser.read_token(); // skip "let" if it is

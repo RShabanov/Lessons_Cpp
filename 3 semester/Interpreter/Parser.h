@@ -31,12 +31,12 @@ class Parser {
 	void token_string();
 	void token_comment();
 
-	void parse_brackets(double& result); // РїР°СЂСЃРёРЅРі СЃРєРѕР±РѕРє ()
-	void parse_unary(double& result); // РїР°СЂСЃРёРЅРі СѓРЅР°СЂРЅС‹С… РѕРїРµСЂР°С†РёР№
-	void parse_power(double& result); // РїР°СЂСЃРёРЅРі СЃС‚РµРїРµРЅРё
-	void parse_mul_div(double& result); // РїР°СЂСЃРёРЅРі СѓРјРЅРѕР¶РµРЅРёСЏ\РґРµР»РµРЅРёСЏ
-	void parse_add_sub(double& result); // РїР°СЂСЃРёРЅРі СЃР»РѕР¶РµРЅРёСЏ\РІС‹С‡РёС‚Р°РЅРёСЏ
-	void parse_relation_oper(double& result); // РїР°СЂСЃРёРЅРі СЂРµР»СЏС†РёРѕРЅРЅС‹С… РІС‹СЂР°Р¶РµРЅРёР№
+	void parse_brackets(double& result); // парсинг скобок ()
+	void parse_unary(double& result); // парсинг унарных операций
+	void parse_power(double& result); // парсинг степени
+	void parse_mul_div(double& result); // парсинг умножения\деления
+	void parse_add_sub(double& result); // парсинг сложения\вычитания
+	void parse_relation_oper(double& result); // парсинг реляционных выражений
 
 	void read_values(double& result);
 	void skip_space();
